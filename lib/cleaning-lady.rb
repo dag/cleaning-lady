@@ -14,12 +14,12 @@ require 'nokogiri'
 class CleaningLady
   SUBSTITUTES = {
     :b => [:strong, {}],
-  }
+  }.freeze
 
   WHITELIST = {
     :p => [],
     :strong => [],
-  }
+  }.freeze
 
   @substitutes = SUBSTITUTES.dup
   @whitelist = WHITELIST.dup

@@ -14,6 +14,10 @@ describe CleaningLady do
       @substitute[1][0].should be_a_kind_of(Symbol)
       @substitute[1][1].should be_a_kind_of(Hash)
     end
+
+    it "should be frozen" do
+      @substitutes.should be_frozen
+    end
   end
 
   describe "::WHITELIST" do
@@ -26,6 +30,10 @@ describe CleaningLady do
       @whitelist.should be_a_kind_of(Hash)
       @whitetag[0].should be_a_kind_of(Symbol)
       @whitetag[1].should be_a_kind_of(Array)
+    end
+
+    it "should be frozen" do
+      @whitelist.should be_frozen
     end
   end
 
