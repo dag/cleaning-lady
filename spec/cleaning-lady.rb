@@ -46,7 +46,7 @@ describe CleaningLady do
     it "should hold the default blacklist" do
       @blacklist.should be_a_kind_of(Hash)
       @blacktag[0].should be_a_kind_of(Symbol)
-      ([Array, NilClass].include? @blacktag[1].class).should be_true
+      @blacktag[1].should satisfy {|it| it.nil? or it.is_a? Array }
     end
 
     it "should be frozen" do
@@ -65,7 +65,7 @@ describe CleaningLady do
     end
 
     it "should not be the same object as the default substitutes" do
-      @substitutes.object_id.should_not == @defaults.object_id
+      @substitutes.should_not equal(@defaults)
     end
   end
 
@@ -80,7 +80,7 @@ describe CleaningLady do
     end
 
     it "should not be the same object as the default whitelist" do
-      @whitelist.object_id.should_not == @defaults.object_id
+      @whitelist.should_not equal(@defaults)
     end
   end
 
@@ -95,7 +95,7 @@ describe CleaningLady do
     end
 
     it "should not be the same object as the default blacklist" do
-      @blacklist.object_id.should_not == @defaults.object_id
+      @blacklist.should_not equal(@defaults)
     end
   end
 
@@ -110,7 +110,7 @@ describe CleaningLady do
     end
 
     it "should not be the same object as the global substitutes" do
-      @substitutes.object_id.should_not == @defaults.object_id
+      @substitutes.should_not equal(@defaults)
     end
   end
 
@@ -125,7 +125,7 @@ describe CleaningLady do
     end
 
     it "should not be the same object as the global whitelist" do
-      @whitelist.object_id.should_not == @defaults.object_id
+      @whitelist.should_not equal(@defaults)
     end
   end
 
@@ -140,7 +140,7 @@ describe CleaningLady do
     end
 
     it "should not be the same object as the global blacklist" do
-      @blacklist.object_id.should_not == @defaults.object_id
+      @blacklist.should_not equal(@defaults)
     end
   end
 
