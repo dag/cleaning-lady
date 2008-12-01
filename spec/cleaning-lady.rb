@@ -1,6 +1,94 @@
 require File.join(File.dirname(__FILE__), '..', 'lib', 'cleaning-lady.rb')
 
 describe CleaningLady do
+  describe "::SUBSTITUTES" do
+    before do
+      @substitutes = CleaningLady::SUBSTITUTES
+      @substitute = @substitutes.first
+    end
+
+    it "should hold the default substitutes" do
+      @substitutes.should be_a_kind_of(Hash)
+      @substitute[0].should be_a_kind_of(Symbol)
+      @substitute[1].should be_a_kind_of(Array)
+      @substitute[1][0].should be_a_kind_of(Symbol)
+      @substitute[1][1].should be_a_kind_of(Hash)
+    end
+  end
+
+  describe "::WHITELIST" do
+    before do
+      @whitelist = CleaningLady::WHITELIST
+      @whitetag = @whitelist.first
+    end
+
+    it "should hold the default whitelist" do
+      @whitelist.should be_a_kind_of(Hash)
+      @whitetag[0].should be_a_kind_of(Symbol)
+      @whitetag[1].should be_a_kind_of(Array)
+    end
+  end
+
+  describe ".substitutes" do
+    before do
+      @defaults = CleaningLady::SUBSTITUTES
+      @substitutes = CleaningLady.substitutes
+    end
+
+    it "should initially equal the default substitutes" do
+      @substitutes.should == @defaults
+    end
+
+    it "should not be the same object as the default substitutes" do
+      @substitutes.object_id.should_not == @defaults.object_id
+    end
+  end
+
+  describe ".whitelist" do
+    before do
+      @defaults = CleaningLady::WHITELIST
+      @whitelist = CleaningLady.whitelist
+    end
+
+    it "should initially equal the default whitelist" do
+      @whitelist.should == @defaults
+    end
+
+    it "should not be the same object as the default whitelist" do
+      @whitelist.object_id.should_not == @defaults.object_id
+    end
+  end
+
+  describe "#substitutes" do
+    before do
+      @defaults = CleaningLady.substitutes
+      @substitutes = CleaningLady.new("").substitutes
+    end
+
+    it "should initially equal the global substitutes" do
+      @substitutes.should == @defaults
+    end
+
+    it "should not be the same object as the global substitutes" do
+      @substitutes.object_id.should_not == @defaults.object_id
+    end
+  end
+
+  describe "#whitelist" do
+    before do
+      @defaults = CleaningLady.whitelist
+      @whitelist = CleaningLady.new("").whitelist
+    end
+
+    it "should initially equal the global whitelist" do
+      @whitelist.should == @defaults
+    end
+
+    it "should not be the same object as the global whitelist" do
+      @whitelist.object_id.should_not == @defaults.object_id
+    end
+  end
+
   describe "#wellformed" do
     before do
       @lady = CleaningLady.new("<strong>hi<p>foo")
