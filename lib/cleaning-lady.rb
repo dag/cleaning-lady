@@ -21,18 +21,24 @@ class CleaningLady
     :strong => [],
   }.freeze
 
+  BLACKLIST = {
+    :script => nil,
+  }.freeze
+
   @substitutes = SUBSTITUTES.dup
   @whitelist = WHITELIST.dup
+  @blacklist = BLACKLIST.dup
 
   class << self
-    attr_reader :substitutes, :whitelist
+    attr_reader :substitutes, :whitelist, :blacklist
   end
 
-  attr_reader :substitutes, :whitelist
+  attr_reader :substitutes, :whitelist, :blacklist
 
   def initialize(stringable)
     @substitutes = self.class.substitutes.dup
     @whitelist = self.class.whitelist.dup
+    @blacklist = self.class.blacklist.dup
     @string = String(stringable)
   end
 
@@ -49,6 +55,12 @@ class CleaningLady
   def white
     nodes = nodes_for(substituted)
     whitelist_on(nodes, :root)
+    String(nodes.children)
+  end
+
+  def black
+    nodes = nodes_for(substituted)
+    blacklist_on(nodes, :root)
     String(nodes.children)
   end
 
@@ -91,6 +103,24 @@ class CleaningLady
     end
     node.children.each do |child|
       whitelist_on(child) unless child.is_a? Nokogiri::XML::Text
+    end if node
+  end
+
+  def blacklist_on(node, root=false)
+    name = node.name.to_sym
+    unless root
+      if @blacklist.has_key? name
+        if @blacklist[name].nil?
+          node.remove
+        else
+          @blacklist[name].each do |attribute|
+            node.remove_attribute(attribute)
+          end
+        end
+      end
+    end
+    node.children.each do |child|
+      blacklist_on(child) unless child.is_a? Nokogiri::XML::Text
     end if node
   end
 end

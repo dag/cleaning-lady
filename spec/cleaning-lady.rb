@@ -37,6 +37,23 @@ describe CleaningLady do
     end
   end
 
+  describe "::BLACKLIST" do
+    before do
+      @blacklist = CleaningLady::BLACKLIST
+      @blacktag = @blacklist.first
+    end
+
+    it "should hold the default blacklist" do
+      @blacklist.should be_a_kind_of(Hash)
+      @blacktag[0].should be_a_kind_of(Symbol)
+      ([Array, NilClass].include? @blacktag[1].class).should be_true
+    end
+
+    it "should be frozen" do
+      @blacklist.should be_frozen
+    end
+  end
+
   describe ".substitutes" do
     before do
       @defaults = CleaningLady::SUBSTITUTES
@@ -64,6 +81,21 @@ describe CleaningLady do
 
     it "should not be the same object as the default whitelist" do
       @whitelist.object_id.should_not == @defaults.object_id
+    end
+  end
+
+  describe ".blacklist" do
+    before do
+      @defaults = CleaningLady::BLACKLIST
+      @blacklist = CleaningLady.blacklist
+    end
+
+    it "should initially equal the default blacklist" do
+      @blacklist.should == @defaults
+    end
+
+    it "should not be the same object as the default blacklist" do
+      @blacklist.object_id.should_not == @defaults.object_id
     end
   end
 
@@ -97,6 +129,21 @@ describe CleaningLady do
     end
   end
 
+  describe "#blacklist" do
+    before do
+      @defaults = CleaningLady.blacklist
+      @blacklist = CleaningLady.new("").blacklist
+    end
+
+    it "should initially equal the global blacklist" do
+      @blacklist.should == @defaults
+    end
+
+    it "should not be the same object as the global blacklist" do
+      @blacklist.object_id.should_not == @defaults.object_id
+    end
+  end
+
   describe "#wellformed" do
     before do
       @lady = CleaningLady.new("<strong>hi<p>foo")
@@ -124,6 +171,16 @@ describe CleaningLady do
 
     it "should remove tags that are not white listed" do
       @lady.white.should == "<p>good</p>"
+    end
+  end
+
+  describe "#black" do
+    before do
+      @lady = CleaningLady.new("<script>alert('hax');</script><foo>foo!</foo>")
+    end
+
+    it "should remove blacklisted tags" do
+      @lady.black.should == "<foo>foo!</foo>"
     end
   end
 end
